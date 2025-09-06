@@ -62,63 +62,62 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <div className="min-h-screen bg-[#F2F5F3] ">
-        <div className=" border-b">
-          <div className="flex items-center justify-between mx-auto max-w-[1470px] px-4 py-2 gap-2 pt-11">
-            <p className="text-[15px]">Showing 1 to {products.length} of 406 results</p>
-            {/* <PaginationInfo/> */}
-            <div>
-              <span className="pr-3 text-[13.50px]">Sort by</span>
-              <div ref={dropdownRef} className="relative inline-block">
-                <div
+    <div className="min-h-screen bg-[#F2F5F3]">
+      {/* Top bar */}
+      <div className="border-b">
+        <div className="flex items-center justify-between mx-auto max-w-[1470px] px-4 py-2 gap-2 pt-11">
+          <p className="text-[15px]">Showing 1 to {products.length} of 406 results</p>
+          <div>
+            <span className="pr-3 text-[13.5px]">Sort by</span>
+            <div ref={dropdownRef} className="relative inline-block">
+              <div
                 onClick={toggleDropdown}
                 className={`flex items-center gap-2 bg-[#e9e9e8] hover:bg-[#F6F4F4] cursor-pointer px-4 py-[9px] rounded-xl transition border ${
                   isOpen ? "border-[#470096]" : "border-gray-300"
-                  }`}>
-                    <span>Featured</span>
-                    {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                </div>
-
-                {isOpen && (
-                  <ul className="absolute right-0 w-40 bg-white border border-gray-200 rounded-md shadow-md mt-1 z-10">
-                    <li className="p-2 bg-[#f6f6f7] hover:bg-gray-200 cursor-pointer rounded-t-md">
-                      Featured
-                    </li>
-                    <li className="p-2 hover:bg-gray-200 cursor-pointer rounded-b-md">
-                      Price low to high
-                    </li>
-                    <li className="p-2 hover:bg-gray-200 cursor-pointer rounded-t-md">
-                      Price high to low
-                    </li>
-                    <li className="p-2 hover:bg-gray-200 cursor-pointer rounded-b-md">
-                      Avg. customer review
-                    </li>
-                  </ul>
-                )}
+                }`}
+              >
+                <span>Featured</span>
+                  {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
               </div>
+
+              {isOpen && (
+                <ul className="absolute right-0 w-40 bg-white border border-gray-200 rounded-md shadow-md mt-1 z-10">
+                  <li className="p-2 bg-[#f6f6f7] hover:bg-gray-200 cursor-pointer rounded-t-md">
+                    Featured
+                  </li>
+                  <li className="p-2 hover:bg-gray-200 cursor-pointer">
+                    Price low to high
+                  </li>
+                  <li className="p-2 hover:bg-gray-200 cursor-pointer">
+                    Price high to low
+                  </li>
+                  <li className="p-2 hover:bg-gray-200 cursor-pointer rounded-b-md">
+                    Avg. customer review
+                  </li>
+                </ul>
+              )}
             </div>
           </div>
         </div>
-         
+      </div>
+
+       {/* Main content */}
+      <div className="flex max-w-[1470px] mx-auto px-4 gap-5 pt-4 pb-4">
          {/* Sidebar */}
-        <div>
-          <div>
-            <aside className="flex items-center justify-between mx-auto max-w-[1470px] px-4 py-2 gap-2 pt-11">
-              <div className="flex min-h-screen">
-                <Sidebar categories={categories} onCategorySelect={handleCategorySelect} />
-                <div className="flex-1 p-4">
-                  <ProductGrid products={filtered} />
-                </div>
-              </div>
-            </aside>
-          </div>     
-        </div>
+        <aside className="lg:w-64 md:w-[220px] flex-shrink-0">
+          <div className="sticky top-28">
+            <Sidebar categories={categories} onCategorySelect={handleCategorySelect} />
+          </div>
+        </aside>
+
+         {/* Products */}
+        <main className="flex-1">
+          <ProductGrid products={filtered} />
+        </main>
       </div>
     </div>
   )
 }
 
 export default Home
-
 
