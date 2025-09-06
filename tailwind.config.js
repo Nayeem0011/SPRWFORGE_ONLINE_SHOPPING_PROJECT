@@ -11,6 +11,9 @@ export default {
         mdx: "990px",  // 3 cards from 990px
         xxl: "1200px", // 5 cards at 1200px+
       },
+      backgroundImage: {
+        'custom-gradient': 'linear-gradient(180deg, #f7f8fa, #e7e9ec)',
+      },
     },
   },
   plugins: [],
