@@ -43,21 +43,24 @@ const Home = () => {
       })
       .catch(console.error);
 
-    // Fetch categories
-    fetch("https://shop.sprwforge.com/api/v1/common")
-      .then(res => res.json())
+    fetch("https://shop.sprwforge.com/api/v1/products?sortby=&shipping=&brand=&collection=&rating=0&max=0&min=0&q=&page=&all_categories=true&sidebar_data=true")
+      .then(res => {
+         if (!res.ok) throw new Error("Network response was not ok");
+         return res.json();
+      })
       .then(json => {
-        const cats: Category[] = json.data?.categories || [];
+        const cats: Category[] = json.data?.all_categories || [];
         setCategories(cats);
       })
-      .catch(console.error);
-  }, []);
+      .catch(err => console.error("Failed to fetch categories:", err));
+
+      }, []);
 
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleCategorySelect = (_id: number) => {
-    // এখন API তে category_id নেই, তাই filtered = products
-    // ভবিষ্যতে category_id এলে filter করতে পারবে
+    // Now the API doesn't have category_id, so filtered = products
+    // In the future, you can filter by category_id.
     setFiltered(products);
   };
 
