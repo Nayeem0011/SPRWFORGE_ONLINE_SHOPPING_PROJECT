@@ -3,65 +3,71 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import Sidebar from "../components/Sidebar";
 import ProductGrid from "../components/ProductGrid";
 import type { Category, Product } from "../types";
-// import PaginationInfo from "../components/comon/PaginationInfo";
 
 const Home = () => {
+  // Dropdown state
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Products, categories, filtered products
   const [products, setProducts] = useState<Product[]>([]);
   const [filtered, setFiltered] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
-  const toggleDropdown = () => {
-    setIsOpen((prev) => !prev);
-  };
+  // Pagination & loading
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 30; // How many products are viewed per page
 
+   const toggleDropdown = () => setIsOpen((prev) => !prev);
+
+  // Click outside dropdown
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-    useEffect(() => {
-    // Fetch products
-    fetch("https://shop.sprwforge.com/api/v1/products?sortby=&shipping=&brand=&collection=&rating=0&max=0&min=0&q=&page=&all_categories=true&sidebar_data=true")
-      .then(res => res.json())
-      .then(json => {
-        const prods: Product[] = json.data?.result?.data || [];
-        setProducts(prods);
-        setFiltered(prods);
-      })
-      .catch(console.error);
 
-    fetch("https://shop.sprwforge.com/api/v1/products?sortby=&shipping=&brand=&collection=&rating=0&max=0&min=0&q=&page=&all_categories=true&sidebar_data=true")
-      .then(res => {
-         if (!res.ok) throw new Error("Network response was not ok");
-         return res.json();
+  // Products & categories fetch
+  useEffect(() => {
+    setLoading(true);
+
+    // Products fetch
+    fetch(`https://shop.sprwforge.com/api/v1/products?page=${page}`)
+      .then(res => res.json())
+      .then(data => {
+        setProducts(data.data.result.data);
+        setFiltered(data.data.result.data); // First will show all
+        setTotalPages(data.data.result.last_page);
+        setLoading(false);
       })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
+
+    // Categories fetch
+    fetch("https://shop.sprwforge.com/api/v1/products?all_categories=true&sidebar_data=true")
+      .then(res => res.json())
       .then(json => {
         const cats: Category[] = json.data?.all_categories || [];
         setCategories(cats);
       })
-      .catch(err => console.error("Failed to fetch categories:", err));
+      .catch(err => console.error("Categories fetch failed:", err));
+  }, [page]);
 
-      }, []);
+    if (loading) return <p className="text-center py-10">Loading...</p>;
 
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleCategorySelect = (_id: number) => {
-    // Now the API doesn't have category_id, so filtered = products
-    // In the future, you can filter by category_id.
-    setFiltered(products);
+  // Category filter
+  const handleCategorySelect = (id: number) => {
+    const filteredProducts = products.filter(p => p.category_id === id);
+    setFiltered(filteredProducts);
   };
 
   return (
@@ -69,7 +75,10 @@ const Home = () => {
       {/* Top bar */}
       <div className="border-b">
         <div className="flex items-center justify-between mx-auto max-w-[1470px] px-4 py-2 gap-2 pt-11">
-          <p className="text-[15px]">Showing 1 to {products.length} of 406 results</p>
+          {/* <p className="text-[15px]">Showing 1 to {products.length} of 406 results</p> */}
+          <p className="text-[15px]">
+            Showing {(page - 1) * itemsPerPage + 1} to {Math.min(page * itemsPerPage, 406)} of 406 results
+          </p>
           <div>
             <span className="pr-3 text-[13.5px]">Sort by</span>
             <div ref={dropdownRef} className="relative inline-block">
@@ -118,9 +127,42 @@ const Home = () => {
           <ProductGrid products={filtered} />
         </main>
       </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-4 gap-2">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage(prev => prev - 1)}
+          className="px-4 py-1 border rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        {/* Page numbers (Compact: 5 per view) */}
+        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+          const startPage = Math.floor((page - 1) / 5) * 5 + 1;
+          const pageNum = startPage + i;
+          return pageNum <= totalPages ? (
+            <button
+              key={pageNum}
+              onClick={() => setPage(pageNum)}
+              className={`px-4 py-1 border rounded ${page === pageNum ? "bg-[#470096] text-white" : ""}`}
+            >
+              {pageNum}
+            </button>
+          ) : null;
+        })}
+
+        <button
+          disabled={page === totalPages}
+          onClick={() => setPage(prev => prev + 1)}
+          className="px-4 py-1 border rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
     </div>
   )
 }
 
 export default Home
-

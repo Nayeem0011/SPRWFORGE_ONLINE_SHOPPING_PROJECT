@@ -34,7 +34,7 @@ export default function Navbar() {
   return (
     <div ref={dropdownRef} className="w-full">
       {/* Topbar */}
-      <div className="">
+      <div className="border-b">
         <div className="flex flex-col sm:flex-row items-center justify-between mx-auto max-w-[1470px] px-4 py-1 gap-2 sm:gap-0">
           
           {/* Left: Language + Mail & Helpline */}
