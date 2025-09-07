@@ -17,11 +17,22 @@ const Home = () => {
 
   // Pagination & loading
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
+
+  // page state with localStorage
+  const [page, setPage] = useState(() => {
+    const savedPage = localStorage.getItem("currentPage");
+    return savedPage ? parseInt(savedPage, 10) : 1;
+  });
+  
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 30; // How many products are viewed per page
 
-   const toggleDropdown = () => setIsOpen((prev) => !prev);
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
+  
+  // Save page whenever it changes
+  useEffect(() => {
+    localStorage.setItem("currentPage", page.toString());
+  }, [page]);
 
   // Click outside dropdown
   useEffect(() => {
