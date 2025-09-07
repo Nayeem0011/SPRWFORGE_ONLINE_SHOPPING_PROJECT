@@ -12,11 +12,13 @@ const Login = () => {
     <div className="min-h-screen bg-[#F2F3F5]">
       {/* Logo */}
       <div className="flex items-center justify-center py-10">
-        <img 
-          src={loginLogo} 
-          alt="Login Logo" 
-          className="w-[118px] h-[55px]"
-        />
+        <Link to="/">
+          <img 
+            src={loginLogo} 
+            alt="Login Logo" 
+            className="w-[118px] h-[55px]"
+          />
+        </Link>
       </div>
 
       <div className="flex items-center justify-center">

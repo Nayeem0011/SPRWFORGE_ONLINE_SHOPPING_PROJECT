@@ -107,11 +107,13 @@ export default function Navbar() {
         
         {/* Logo */}
         <div className="w-full md:w-auto flex justify-start">
-          <img
-            src={navberLogo}
-            alt="Navbar Logo"
-            className="w-[54.02px] h-[25px] object-contain md:w-[75.63px] md:h-[34.98px]"
-          />
+          <Link to="/">
+            <img
+              src={navberLogo}
+              alt="Navbar Logo"
+              className="w-[54.02px] h-[25px] object-contain md:w-[75.63px] md:h-[34.98px]"
+            />
+          </Link>
         </div>
 
          {/* Search */}

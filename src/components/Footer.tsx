@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import footerLogo from "../assets/logo.png";
+import { Link } from "react-router-dom";
 
 interface Category {
   id: number;
@@ -47,11 +48,13 @@ export default function Footer() {
 
          {/* Logo below (same container) */}
         <div className="flex justify-center items-center mt-8 border-t pt-4 pb-0">
-          <img
-            src={footerLogo}
-            alt="Logo"
-            className="w-[108.05px] h-[49.98px]"
-          />
+          <Link to="/">
+            <img
+              src={footerLogo}
+              alt="Logo"
+              className="w-[108.05px] h-[49.98px]"
+            />
+          </Link>
         </div>
       </div>
     </footer>

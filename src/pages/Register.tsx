@@ -7,18 +7,20 @@ import { FaRegUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Register = () => {
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div>
       <div className="min-h-screen bg-[#F2F3F5]">
       {/* Logo */}
       <div className="flex items-center justify-center py-10">
-        <img 
-          src={registerLogo} 
-          alt="Login Logo" 
-          className="w-[118px] h-[55px]"
-        />
+        <Link to="/">
+          <img 
+            src={registerLogo} 
+            alt="Login Logo" 
+            className="w-[118px] h-[55px]"
+          />
+        </Link>
       </div>
 
       <div className="flex items-center justify-center">
