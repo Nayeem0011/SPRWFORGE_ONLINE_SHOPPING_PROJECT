@@ -3,6 +3,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import Sidebar from "../components/Sidebar";
 import ProductGrid from "../components/ProductGrid";
 import type { Category, Product } from "../types";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Home = () => {
   // Dropdown state
@@ -129,37 +130,45 @@ const Home = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-4 gap-2">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage(prev => prev - 1)}
-          className="px-4 py-1 border rounded disabled:opacity-50"
-        >
-          Prev
-        </button>
+      <div className="flex justify-end mx-auto max-w-[1470px] p-6 mt-4">
+        <div className="flex items-center border rounded-xl overflow-hidden">
+           {/* Prev Button */}
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(prev => prev - 1)}
+            className="w-9 h-9 border-r flex items-center hover:bg-blue-50 justify-center bg-white text-black disabled:opacity-50"
+          >
+            <FaChevronLeft />
+          </button>
 
-        {/* Page numbers (Compact: 5 per view) */}
-        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-          const startPage = Math.floor((page - 1) / 5) * 5 + 1;
-          const pageNum = startPage + i;
-          return pageNum <= totalPages ? (
-            <button
-              key={pageNum}
-              onClick={() => setPage(pageNum)}
-              className={`px-4 py-1 border rounded ${page === pageNum ? "bg-[#470096] text-white" : ""}`}
-            >
-              {pageNum}
-            </button>
-          ) : null;
-        })}
+           {/* Page Numbers */}
+          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            const startPage = Math.floor((page - 1) / 5) * 5 + 1;
+            const pageNum = startPage + i;
+            return pageNum <= totalPages ? (
+              <button
+                key={pageNum}
+                onClick={() => setPage(pageNum)}
+                className={`w-9 h-9 flex items-center justify-center ${
+                  page === pageNum
+                  ? "bg-[#470096] text-white font-bold"
+                  : "bg-white border-r text-black hover:bg-blue-50"
+                }`}
+              >
+                {pageNum}
+              </button>
+            ) : null;
+          })}
 
-        <button
-          disabled={page === totalPages}
-          onClick={() => setPage(prev => prev + 1)}
-          className="px-4 py-1 border rounded disabled:opacity-50"
-        >
-          Next
-        </button>
+           {/* Next Button */}
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage(prev => prev + 1)}
+            className="w-9 h-9 flex items-center justify-center hover:bg-blue-50 bg-white text-black disabled:opacity-50"
+          >
+            <FaChevronRight />
+          </button>
+        </div>
       </div>
     </div>
   )
