@@ -1,4 +1,5 @@
 export interface Product {
+  thumbnail: string;
   id: number;
   title: string;
   slug: string;

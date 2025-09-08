@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import Register from "./pages/Register";
 import Footer from "./components/Footer";
+import ShopPage from "./pages/ShopPage";
 
 function Layout() {
   const location = useLocation();
@@ -23,6 +24,7 @@ function Layout() {
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/category/:slug" element={<ShopPage />} />
         </Routes>
         {/* Footer only if not hidden */}
       {!hideLayout && <Footer />}

@@ -1,27 +1,56 @@
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import type { Category } from "../types";
+import { FaAnglesLeft } from "react-icons/fa6";
 
 interface Props {
   categories: Category[];
   onCategorySelect: (id: number) => void;
+  activeSlug?: string; // For which category is active
 }
 
-export default function Sidebar({ categories, onCategorySelect }: Props) {
+export default function Sidebar({ categories, }: Props) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { slug } = useParams(); // slug to catch
+
+  // Will check that URL "/category/" Start with
+  const isCategoryPage = location.pathname.startsWith("/category/");
+
   return (
     <div className="lg:w-64 border-r md:w-[220px] pr-3">
       <ul className="mb-6">
         {categories.map((cat) => (
-          <li
-            key={cat.id}
-            className="cursor-pointer py-1 text-[#333333] text-[16px]"
-            onClick={() => onCategorySelect(cat.id)}
-          >
-            {cat.title}
+          <li key={cat.id} className="py-1 text-[#333333] text-[16px]">
+            <Link
+              to={`/category/${cat.slug}`}
+              className="cursor-pointer"
+            >
+              {cat.title}
+            </Link>
           </li>
         ))}
       </ul>
 
-      {/* Price Section */}
+       {/* Back Button only on Category Page */}
+      {isCategoryPage && (
+        <div className="">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1 text-[14px] font-medium pl-2"
+          >
+            <FaAnglesLeft className="text-[14px] text-gray-500" />
+            Go back
+          </button>
+        </div>
+      )}
+
+       {/* Price Section */}
       <div className="mt-6">
+        {isCategoryPage && slug && (
+          <h3 className="text-[15px] text-[#333333] mb-4 capitalize">
+            {slug}
+          </h3>
+        )}
         <h3 className="font-bold text-[18.75px] text-[#333333] mb-2">Price</h3>
         <p className="text-[13.5px] text-[#111111] mb-2">Any price</p>
 
@@ -65,3 +94,4 @@ export default function Sidebar({ categories, onCategorySelect }: Props) {
     </div>
   );
 }
+
