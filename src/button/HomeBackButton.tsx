@@ -1,18 +1,18 @@
 import { FaChevronRight } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const HomeBackButton = () => {
-  const navigate = useNavigate();
 
   return (
     <div>
+      <Link to="/">
       <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-1 text-[#333] font-medium"
+        className="flex items-center gap-1 text-[#111111] font-medium"
       >
-        <span className="inline-flex items-center text-[14px]">Home</span>
+        <span className="inline-flex items-center text-[15px]">Home</span>
         <FaChevronRight className="inline-flex items-center text-[12px]" />
       </button>
+      </Link>
     </div>
   );
 };

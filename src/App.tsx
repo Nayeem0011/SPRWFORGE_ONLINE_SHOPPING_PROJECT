@@ -6,6 +6,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Register from "./pages/Register";
 import Footer from "./components/Footer";
 import ShopPage from "./pages/ShopPage";
+import ProductDetails from "./features/products/ProductDetails ";
 
 function Layout() {
   const location = useLocation();
@@ -17,19 +18,23 @@ function Layout() {
   const hideLayout = hideNavbarRoutes.includes(location.pathname);
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       {!hideLayout && <Navbar />}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/category/:slug" element={<ShopPage />} />
-        </Routes>
+
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/category/:slug" element={<ShopPage />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+          </Routes>
+        </div>
+
         {/* Footer only if not hidden */}
       {!hideLayout && <Footer />}
-
-    </>
+    </div>
   );
 }
 

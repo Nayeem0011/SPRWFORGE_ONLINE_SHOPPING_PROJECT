@@ -1,21 +1,20 @@
-export interface Product {
-  thumbnail: string;
+export type Category = {
   id: number;
   title: string;
   slug: string;
-  selling: number;
-  offered: number;
-  image: string;
-  review_count: number;
-  rating: number;
-  price: number | null;
-  end_time: string | null;
-  category_id?: number;
-}
+};
 
-export interface Category {
+export type Product = {
   id: number;
   title: string;
-  slug: string;
-  in_footer_child?: Category[];
-}
+  description: string;
+  overview?: string;
+  image: string;
+  brand?: {
+    id: number;
+    title: string;
+    name:string
+  };
+  // New property
+  current_categories: Category[];
+};

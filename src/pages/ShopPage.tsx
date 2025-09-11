@@ -5,6 +5,7 @@ import Sidebar from "../components/Sidebar";
 import HomeBackButton from "../button/HomeBackButton";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import ProductGrid from "../components/ProductGrid";
+import ErrorPage from "../notfound/ErrorPage";
 
 export default function ShopPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -124,13 +125,16 @@ export default function ShopPage() {
           </h1>
 
           {products.length === 0 ? (
-            <p>No products found.</p>
+            <p><ErrorPage/></p>
             ) : (
-              <ProductGrid products={products} />
+              <div className="pt-4">
+                <ProductGrid products={products} />
+              </div>
             )}
         </div>
       </div>
     </div>
   );
 }
+
 

@@ -9,3 +9,11 @@
   font-family: 'Noto Sans', sans-serif;
 } */
 
+/* scrollbar লুকানোর জন্য */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE এবং Edge */
+  scrollbar-width: none;     /* Firefox */
+}

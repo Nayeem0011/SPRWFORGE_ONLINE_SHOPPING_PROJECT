@@ -31,7 +31,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="py-5 bg-white">
+    <footer className="py-5 pt-10 bg-white">
       <div className="max-w-[1140px] mx-auto container sm:px-[100px] md:px-16">
          {/* Category grid */}
         <div className="grid grid-cols-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 text-gray-700 gap-2">
