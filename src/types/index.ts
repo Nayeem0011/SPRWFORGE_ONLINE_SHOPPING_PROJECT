@@ -15,6 +15,7 @@ export type Product = {
     title: string;
     name:string
   };
+  category_id?: number;
   // New property
   current_categories: Category[];
 };
