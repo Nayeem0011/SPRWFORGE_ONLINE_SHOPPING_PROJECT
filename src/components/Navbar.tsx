@@ -2,10 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import { BsArrowRightCircle } from "react-icons/bs";
 // import { FaRegUser } from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { IoCallOutline, IoSearchOutline } from "react-icons/io5";
+import { IoCallOutline } from "react-icons/io5";
 import { TfiEmail } from "react-icons/tfi";
 import { Link } from "react-router-dom";
-import navberLogo from "../assets/logo.png";
+import Search from "./comon/Search";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -101,33 +101,8 @@ export default function Navbar() {
 
         </div>
       </div>
-
-      {/* 🔹 Main Navbar (Logo + Search) */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mx-auto max-w-[1470px] px-4 py-3 gap-4">
-        
-        {/* Logo */}
-        <div className="w-full md:w-auto flex justify-start">
-          <Link to="/">
-            <img
-              src={navberLogo}
-              alt="Navbar Logo"
-              className="w-[54.02px] h-[25px] object-contain md:w-[75.63px] md:h-[34.98px]"
-            />
-          </Link>
-        </div>
-
-         {/* Search */}
-        <div className="flex items-center w-full md:w-[90%] lg:w-[1190px] h-[44px] bg-[#f2f3f5] border rounded-xl focus-within:ring-1 focus-within:ring-[#470096]">
-          <input
-            type="text"
-            placeholder="Search Here"
-            className="flex-1 h-full px-4 text-sm bg-[#f2f3f5] border border-transparent rounded-l-xl focus:outline-none"
-          />
-          <button className="bg-[#470096] w-[50px] h-[44px] flex items-center justify-center  text-white rounded-r-xl">
-            <IoSearchOutline className="text-lg" />
-          </button>
-        </div>
-      </div>
+       {/* Search */}
+      <Search/>
     </div>
   );
 }

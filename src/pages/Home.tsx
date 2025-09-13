@@ -4,11 +4,15 @@ import Sidebar from "../components/Sidebar";
 import ProductGrid from "../components/ProductGrid";
 import type { Category, Product } from "../types";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import SidebarModal from "../components/comon/SidebarModal";
 
 const Home = () => {
-  // Dropdown state
+
+  // Sort Dropdown
   const [isOpen, setIsOpen] = useState(false);
+  const [sortBy, setSortBy] = useState("Featured");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
   // Products, categories, filtered products
   const [products, setProducts] = useState<Product[]>([]);
@@ -26,15 +30,33 @@ const Home = () => {
   
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 30; // How many products are viewed per page
-
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
   
-  // Save page whenever it changes
+  // Price Filter
+  const [minPrice, setMinPrice] = useState<number>(0);
+  const [maxPrice, setMaxPrice] = useState<number>(Infinity);
+
+  // Mobile screen check
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 575);
+
+  // SidebarModal open/close
+  const [openSidebar, setOpenSidebar] = useState(isMobile);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 575;
+      setIsMobile(mobile);
+      setOpenSidebar(mobile); 
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Save page to localStorage
   useEffect(() => {
     localStorage.setItem("currentPage", page.toString());
   }, [page]);
 
-  // Click outside dropdown
+  // Click outside dropdown close
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -78,8 +100,45 @@ const Home = () => {
 
   // Category filter
   const handleCategorySelect = (id: number) => {
-    const filteredProducts = products.filter(p => p.category_id === id);
+    let filteredProducts = products.filter(p => p.category_id === id);
+   
+    // Apply current price filter too
+    filteredProducts = filteredProducts.filter(p => p.selling >= minPrice && p.selling <= maxPrice);
+
     setFiltered(filteredProducts);
+  };
+
+  // Price filter
+  const handlePriceFilter = (min: number, max: number) => {
+    setMinPrice(min);
+    setMaxPrice(max);
+
+  const filteredProducts = products.filter(p => p.selling >= min && p.selling <= max);
+
+    // Apply current category filter (if any)
+    // If the category is already filtered, filter again with the filtered array.
+    setFiltered(filteredProducts);
+  };
+
+  // Sort function
+  const handleSort = (option: string) => {
+    setSortBy(option);
+
+    const sortedProducts = [...filtered];
+
+    if (option === "Featured") {
+      // Featured products first 
+      sortedProducts.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    } else if (option === "Price low to high") {
+      sortedProducts.sort((a, b) => Number(a.selling) - Number(b.selling));
+    } else if (option === "Price high to low") {
+      sortedProducts.sort((a, b) => Number(b.selling) - Number(a.selling));
+    } else if (option === "Avg. customer review") {
+      sortedProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    }
+
+    setFiltered(sortedProducts);
+    setIsOpen(false);
   };
 
   return (
@@ -88,53 +147,82 @@ const Home = () => {
       <div className="border-b">
         <div className="flex items-center justify-between mx-auto max-w-[1470px] px-4 py-2 gap-2 pt-11">
           {/* <p className="text-[15px]">Showing 1 to {products.length} of 406 results</p> */}
-          <p className="text-[15px]">
+          <p className="hidden md:inline-block text-[15px]">
             Showing {(page - 1) * itemsPerPage + 1} to {Math.min(page * itemsPerPage, 406)} of 406 results
           </p>
+          
+          {/* Sort by dropdown */}
           <div>
-            <span className="pr-3 text-[13.5px]">Sort by</span>
+            <span className="hidden md:inline-block pr-3 text-[13.5px]">Sort by</span>
             <div ref={dropdownRef} className="relative inline-block">
               <div
                 onClick={toggleDropdown}
                 className={`flex items-center gap-2 bg-[#e9e9e8] hover:bg-[#F6F4F4] cursor-pointer px-4 py-[9px] rounded-xl transition border ${
-                  isOpen ? "border-[#470096]" : "border-gray-300"
+                 isOpen ? "border-[#470096]" : "border-gray-300"
                 }`}
               >
-                <span>Featured</span>
-                  {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                <span>{sortBy}</span>
+                {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
               </div>
 
               {isOpen && (
                 <ul className="absolute right-0 w-40 bg-white border border-gray-200 rounded-md shadow-md mt-1 z-10">
-                  <li className="p-2 bg-[#f6f6f7] hover:bg-gray-200 cursor-pointer rounded-t-md">
-                    Featured
-                  </li>
-                  <li className="p-2 hover:bg-gray-200 cursor-pointer">
-                    Price low to high
-                  </li>
-                  <li className="p-2 hover:bg-gray-200 cursor-pointer">
-                    Price high to low
-                  </li>
-                  <li className="p-2 hover:bg-gray-200 cursor-pointer rounded-b-md">
-                    Avg. customer review
-                  </li>
+                  {["Featured", "Price low to high", "Price high to low", "Avg. customer review"].map((option, idx) => (
+                    <li
+                      key={idx}
+                      className={`p-2 hover:bg-gray-200 cursor-pointer ${
+                        idx === 0 ? "rounded-t-md" : idx === 3 ? "rounded-b-md" : ""
+                      }`}
+                      onClick={() => handleSort(option)}
+                    >
+                      {option}
+                    </li>
+                  ))}
                 </ul>
               )}
             </div>
           </div>
+
+           {/* Filters only on mobile */}
+          {isMobile && (
+            <button
+              onClick={() => setOpenSidebar(true)}
+              className="flex items-center justify-center gap-2 bg-gradient-to-b from-[#f7f8fa] rounded-xl to-[#e7e9ec] border border-[#bbb] shadow-inner text-base h-[44px] leading-[42px] px-4 mb-1 
+              transition-all duration-100 ease-in-out  no-underline hover:from-[#e7e9ec] hover:to-[#f7f8fa] hover:border-gray-400"
+            >
+              Filters
+              {openSidebar ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </button>
+          )}
         </div>
       </div>
 
-       {/* Main content */}
+      {/* Main content */}
       <div className="flex max-w-[1470px] mx-auto px-4 gap-5 pt-4 pb-4">
-         {/* Sidebar */}
-        <aside className="lg:w-64 md:w-[220px] flex-shrink-0">
-          <div className="sticky top-28">
-            <Sidebar categories={categories} onCategorySelect={handleCategorySelect} />
-          </div>
-        </aside>
+        {/* Sidebar only on desktop */}
+        {!isMobile && (
+          <aside className="lg:w-64 md:w-[220px] flex-shrink-0">
+            <div className="sticky top-28">
+              <Sidebar
+                categories={categories}
+                onCategorySelect={handleCategorySelect}
+                onPriceFilter={handlePriceFilter}
+              />
+            </div>
+          </aside>
+        )}
 
-         {/* Products */}
+        {/* SidebarModal only on mobile */}
+        {isMobile && openSidebar && (
+          <SidebarModal 
+            categories={categories}
+            onCategorySelect={handleCategorySelect}
+            onPriceFilter={handlePriceFilter}
+            onClose={() => setOpenSidebar(false)} 
+          />
+        )}
+
+        {/* Products */}
         <main className="flex-1">
           <ProductGrid products={filtered} />
         </main>
@@ -186,3 +274,6 @@ const Home = () => {
 }
 
 export default Home
+
+
+

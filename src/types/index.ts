@@ -5,6 +5,9 @@ export type Category = {
 };
 
 export type Product = {
+  rating: number;
+  featured: unknown;
+  selling: number;
   id: number;
   title: string;
   description: string;

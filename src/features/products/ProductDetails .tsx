@@ -4,6 +4,8 @@ import type { Product } from "../../types";
 import HomeBackButton from "../../button/HomeBackButton";
 import Breadcrumb from "./Breadcrumb";
 import ProductDetailsPage from "./ProductDetailsPage";
+import { MdClose } from "react-icons/md";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -11,6 +13,7 @@ export default function ProductDetails() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [openCart, setOpenCart] = useState(false);
 
   // Zoom state
   const [lensPos, setLensPos] = useState({ x: 0, y: 0 });
@@ -85,6 +88,7 @@ export default function ProductDetails() {
                   src={`https://shop.sprwforge.com/uploads/${product.image}`}
                   alt={product.title}
                   className="w-[400px] cursor-pointer"
+                  onClick={() => setOpenCart(true)}
                 />
 
                  {/* Lens Box (effect) */}
@@ -101,6 +105,69 @@ export default function ProductDetails() {
                   />
                 )}
             </div>
+             
+             {/* Image Cart */}
+            {openCart && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center">
+                 {/* Background overlay */}
+                <div
+                  className="absolute inset-0 bg-black/40"
+                  onClick={() => setOpenCart(false)}
+                />
+
+                 {/* Modal container */}
+                <div className="relative z-50 max-w-[1470px] mx-auto flex w-[90%] h-[800px] rounded-lg bg-white shadow-lg overflow-hidden">
+
+                   {/* Left side - Product Image */}
+                  <div className="flex-1 flex items-center justify-center p-10 bg-white">
+                    <img
+                      src={`https://shop.sprwforge.com/uploads/${product.image}`}
+                      alt={product.title}
+                      className="max-h-[450px] object-contain"
+                    />
+
+                     {/* Left button */}
+                    <button
+                      className="absolute ml-2 left-0 top-1/2 -translate-y-1/2 bg-gray-300 hover:bg-gray-400 shadow-md p-2.5 rounded-full z-10"
+                    >
+                      <span className="text-white">
+                        <FaChevronLeft />
+                      </span>
+                    </button>
+                  </div>
+
+                   {/* Right side - Product Info */}
+                  <div className="w-[300px] bg-[#f1f2f1] border p-6 relative flex flex-col">
+                     {/* Close button */}
+                    <button
+                      onClick={() => setOpenCart(false)}
+                      className="absolute text-[18px] py-1 px-1 rounded-full border border-[#470096] hover:bg-[#FFFFFF] right-4 top-4 text-gray-600 "
+                    >
+                      <MdClose />
+                    </button>
+
+                    <h2 className="text-lg font-semibold mb-6 mt-6">{product.title}</h2>
+                     {/* Small image preview */}
+                    <div className="rounded-lg p-1 w-20">
+                      <img 
+                        src={`https://shop.sprwforge.com/uploads/${product.image}`} 
+                        alt={product.title} 
+                        className="rounded-lg border border-[#470096] shadow-lg"
+                      />
+                    </div>
+
+                    {/* Right button */}
+                    <button
+                      className="absolute left-[-40px] top-1/2 -translate-y-1/2 bg-gray-300 hover:bg-gray-400 shadow-md p-2.5 rounded-full z-10"
+                    >
+                      <span className="text-white">
+                        <FaChevronRight />
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
              {/* Small thumbnail */}
             <div className="flex items-center justify-center gap-2 py-5">
@@ -191,7 +258,7 @@ export default function ProductDetails() {
         </div>
       </div>
     </div>
-    <div className="pt-4">
+    <div className="max-w-[1470px] mx-auto pt-4">
       <ProductDetailsPage/>
     </div>
     </>

@@ -1,14 +1,16 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import type { Category } from "../types";
 import { FaAnglesLeft } from "react-icons/fa6";
+import { useState } from "react";
 
 interface Props {
   categories: Category[];
   onCategorySelect: (id: number) => void;
   activeSlug?: string; // For which category is active
+  onPriceFilter?: (min: number, max: number) => void;
 }
 
-export default function Sidebar({ categories, }: Props) {
+export default function Sidebar({ categories, onCategorySelect, onPriceFilter }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
   const { slug } = useParams(); // slug to catch
@@ -16,14 +18,26 @@ export default function Sidebar({ categories, }: Props) {
   // Will check that URL "/category/" Start with
   const isCategoryPage = location.pathname.startsWith("/category/");
 
+  // 🔹 Min-Max state
+  const [minPrice, setMinPrice] = useState<number | "">("");
+  const [maxPrice, setMaxPrice] = useState<number | "">("");
+
+  const handleGoClick = () => {
+    const min = Number(minPrice) || 0;
+    const max = Number(maxPrice) || Infinity;
+    if (onPriceFilter) onPriceFilter(min, max);
+  };
+
   return (
-    <div className="lg:w-64 border-r md:w-[220px] pr-3">
+    <div className="lg:w-64 border-r md:w-[220px] sm:w-[220px] pr-3">
+       {/* Categories */}
       <ul className="mb-6">
         {categories.map((cat) => (
           <li key={cat.id} className="py-1 text-[#333333] text-[16px]">
             <Link
               to={`/category/${cat.slug}`}
               className="cursor-pointer"
+              onClick={() => onCategorySelect(cat.id)}
             >
               {cat.title}
             </Link>
@@ -64,6 +78,8 @@ export default function Sidebar({ categories, }: Props) {
             <input
               type="number"
               placeholder="Min"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value === "" ? "" : Number(e.target.value))}
               className="w-full border border-gray-300 bg-white rounded-xl px-2 py-2.5 pl-8 text-sm outline-none h-[44px]"
             />
           </div>
@@ -79,12 +95,16 @@ export default function Sidebar({ categories, }: Props) {
               <input
                 type="number"
                 placeholder="Max"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value === "" ? "" : Number(e.target.value))}
                 className="w-full border border-gray-300 bg-white rounded-xl px-2 py-2.5 pl-8 text-sm outline-none h-[44px]"
               />
             </div>
 
              {/* Go Button */}
-            <button className="bg-gradient-to-b from-[#f7f8fa] rounded-xl to-[#e7e9ec] border border-[#bbb] shadow-inner text-base h-[44px] leading-[42px] px-4 mb-1 
+            <button 
+            onClick={handleGoClick}
+            className="bg-gradient-to-b from-[#f7f8fa] rounded-xl to-[#e7e9ec] border border-[#bbb] shadow-inner text-base h-[44px] leading-[42px] px-4 mb-1 
             transition-all duration-100 ease-in-out inline-block no-underline hover:from-[#e7e9ec] hover:to-[#f7f8fa] hover:border-gray-400">
               Go
             </button>
@@ -94,4 +114,6 @@ export default function Sidebar({ categories, }: Props) {
     </div>
   );
 }
+
+
 

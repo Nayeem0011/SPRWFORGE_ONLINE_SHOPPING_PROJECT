@@ -6,6 +6,7 @@ import HomeBackButton from "../button/HomeBackButton";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import ProductGrid from "../components/ProductGrid";
 import ErrorPage from "../notfound/ErrorPage";
+import SidebarModal from "../components/comon/SidebarModal";
 
 export default function ShopPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -23,6 +24,11 @@ export default function ShopPage() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const toggleDropdown = () => setIsOpen(!isOpen);
 
+  // Price Filter
+  const [minPrice, setMinPrice] = useState<number>(0);
+  const [maxPrice, setMaxPrice] = useState<number>(Infinity);
+  const [filtered, setFiltered] = useState<Product[]>([]);
+
   // Fetch Categories (Sidebar)
   useEffect(() => {
     async function fetchCategories() {
@@ -35,6 +41,22 @@ export default function ShopPage() {
       }
     }
     fetchCategories();
+  }, []);
+
+  // Mobile screen check
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 575);
+
+  // SidebarModal open/close
+  const [openSidebar, setOpenSidebar] = useState(isMobile);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 575;
+      setIsMobile(mobile);
+      setOpenSidebar(mobile); 
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Fetch Products by Category Slug
@@ -59,6 +81,28 @@ export default function ShopPage() {
 
   if (loading) return <p className="text-center py-10">Loading...</p>;
 
+  // Category filter
+  const handleCategorySelect = (id: number) => {
+    let filteredProducts = products.filter(p => p.category_id === id);
+   
+    // Apply current price filter too
+    filteredProducts = filteredProducts.filter(p => p.selling >= minPrice && p.selling <= maxPrice);
+
+    setFiltered(filteredProducts);
+  };
+
+  // Price filter
+  const handlePriceFilter = (min: number, max: number) => {
+    setMinPrice(min);
+    setMaxPrice(max);
+
+    const filteredProducts = products.filter(
+      (p) => p.selling >= min && p.selling <= max
+    );
+
+    setFiltered(filteredProducts);
+  };
+
   return (
     <div>
        {/* Top Bar - Full Width */}
@@ -66,15 +110,15 @@ export default function ShopPage() {
         <div className="max-w-[1470px] mx-auto flex items-center justify-between px-6 py-2">
          
            {/* Left side: Showing results + Category */}
-          <p className="text-[15px]">
+          <p className="hidden md:inline-block text-[15px]">
             Showing {(page - 1) * itemsPerPage + 1} to {Math.min(page * itemsPerPage, products.length)} of {products.length} results
             slug && <span className="ml-2 font-bold text-[16px] text-black">"{slug}"</span>
           </p>
 
            {/* Sort by dropdown */}
           <div>
-            <span className="pr-3 text-[13.5px]">Sort by</span>
-            <div ref={dropdownRef} className="relative inline-block">
+            <span className="hidden md:inline-block pr-3 text-[13.5px]">Sort by</span>
+            <div ref={dropdownRef} className=" relative inline-block">
               <div
                 onClick={toggleDropdown}
                 className={`flex items-center gap-2 bg-[#e9e9e8] hover:bg-[#F6F4F4] cursor-pointer px-4 py-[9px] rounded-xl transition border ${
@@ -107,15 +151,43 @@ export default function ShopPage() {
               )}
             </div>
           </div>
+
+          {/* Filters only on mobile */}
+          {isMobile && (
+            <button
+              onClick={() => setOpenSidebar(true)}
+              className="flex items-center justify-center gap-2 bg-gradient-to-b from-[#f7f8fa] rounded-xl to-[#e7e9ec] border border-[#bbb] shadow-inner text-base h-[44px] leading-[42px] px-4 mb-1 
+              transition-all duration-100 ease-in-out  no-underline hover:from-[#e7e9ec] hover:to-[#f7f8fa] hover:border-gray-400"
+            >
+              Filter
+              {openSidebar ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </button>
+          )}
         </div>
       </div>
 
       <div className="max-w-[1470px] mx-auto flex gap-6 p-6">
-         {/* Sidebar */}
-        <Sidebar categories={categories} activeSlug={slug} onCategorySelect={function (): void {
-          throw new Error("Function not implemented.");
-        } } 
-        />
+         {/* Sidebar only on desktop */}
+        {!isMobile && (
+          <aside className="lg:w-64 md:w-[220px] flex-shrink-0">
+            <div className="sticky top-28">
+              <Sidebar categories={categories} activeSlug={slug} onCategorySelect={function (): void {
+                throw new Error("Function not implemented.");
+              } } 
+              />
+            </div>
+          </aside>
+        )}
+
+         {/* SidebarModal only on mobile */}
+        {isMobile && openSidebar && (
+          <SidebarModal
+            categories={categories}
+            onCategorySelect={handleCategorySelect}
+            onPriceFilter={handlePriceFilter}
+            onClose={() => setOpenSidebar(false)} 
+          />
+        )}
 
          {/* Products Section */}
         <div className="flex-1">
@@ -128,7 +200,7 @@ export default function ShopPage() {
             <p><ErrorPage/></p>
             ) : (
               <div className="pt-4">
-                <ProductGrid products={products} />
+                <ProductGrid products={filtered.length > 0 ? filtered : products}  />
               </div>
             )}
         </div>
