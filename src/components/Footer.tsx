@@ -34,7 +34,7 @@ export default function Footer() {
     <footer className="py-5 pt-10 bg-white">
       <div className="max-w-[1140px] mx-auto container sm:px-[100px] md:px-16">
          {/* Category grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 text-gray-700 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ml-10 sm:ml-10 text-gray-700 gap-2">
           {categories.map((cat) => (
             <a
               key={cat.id}

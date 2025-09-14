@@ -96,7 +96,10 @@ const Home = () => {
       .catch(err => console.error("Categories fetch failed:", err));
   }, [page]);
 
-    if (loading) return <p className="text-center py-10">Loading...</p>;
+    if (loading) return <p className="flex items-center justify-center pt-20">
+      <div className="w-16 h-16 border-4 border-t-[#470096] border-gray-300 rounded-full animate-spin">
+      </div>
+    </p>;
 
   // Category filter
   const handleCategorySelect = (id: number) => {
