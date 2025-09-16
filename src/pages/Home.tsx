@@ -39,17 +39,25 @@ const Home = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 575);
 
   // SidebarModal open/close
-  const [openSidebar, setOpenSidebar] = useState(isMobile);
+  const [showSidebar, setShowSidebar] = useState(true);
+  const [userClosed, setUserClosed] = useState(false); 
 
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 575;
       setIsMobile(mobile);
-      setOpenSidebar(mobile); 
+
+      if (mobile && !userClosed) {
+        setShowSidebar(true);
+      } else {
+        setShowSidebar(false);
+      }
     };
+
+    handleResize(); 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [userClosed]);
 
   // Save page to localStorage
   useEffect(() => {
@@ -217,12 +225,12 @@ const Home = () => {
           {/* Filters only on mobile */}
           {isMobile && (
             <button
-              onClick={() => setOpenSidebar(true)}
+              onClick={() => setShowSidebar(true)}
               className="flex items-center justify-center gap-2 bg-gradient-to-b from-[#f7f8fa] rounded-xl to-[#e7e9ec] border border-[#bbb] shadow-inner text-base h-[44px] leading-[42px] px-4 mb-1 
               transition-all duration-100 ease-in-out  no-underline hover:from-[#e7e9ec] hover:to-[#f7f8fa] hover:border-gray-400"
             >
               Filters
-              {openSidebar ? <IoIosArrowUp /> : <IoIosArrowDown />}
+              {showSidebar ? <IoIosArrowUp /> : <IoIosArrowDown />}
             </button>
           )}
         </div>
@@ -244,12 +252,15 @@ const Home = () => {
         )}
 
         {/* SidebarModal only on mobile */}
-        {isMobile && openSidebar && (
+        {showSidebar && !userClosed && (
           <SidebarModal 
             categories={categories}
             onCategorySelect={handleCategorySelect}
             onPriceFilter={handlePriceFilter}
-            onClose={() => setOpenSidebar(false)} 
+             onClose={() => {
+              setShowSidebar(false);
+              setUserClosed(true); 
+            }}
           />
         )}
 
