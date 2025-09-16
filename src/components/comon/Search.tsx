@@ -11,6 +11,7 @@ const Search = () => {
   const [results, setResults] = useState<any>(null);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false); // loading state
+  const [isFocused, setIsFocused] = useState(true);
  
   const dropdownRef = useRef<HTMLDivElement>(null); // ref for dropdown
 
@@ -75,6 +76,8 @@ const Search = () => {
             <input
               type="text"
               value={query}
+              onFocus={() => setIsFocused(true)} 
+              onBlur={() => setIsFocused(false)} 
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search Here"
               className="flex-1 h-full px-4 text-sm bg-[#f2f3f5] border border-transparent rounded-l-xl focus:outline-none"
@@ -84,7 +87,7 @@ const Search = () => {
             </button>
           </div>
 
-          {open && (
+          {open && !isFocused && (
             <div className="absolute top-[48px] left-0 w-full bg-white border rounded-md shadow-lg p-6 z-20 max-h-[500px] overflow-y-auto">
               {loading ? (
                 <div className="flex justify-center items-center py-10">
