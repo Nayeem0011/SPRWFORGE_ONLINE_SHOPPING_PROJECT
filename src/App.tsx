@@ -7,6 +7,10 @@ import Register from "./pages/Register";
 import Footer from "./components/Footer";
 import ShopPage from "./pages/ShopPage";
 import ProductDetails from "./features/products/ProductDetails ";
+import Cart from "./features/cart/Cart";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
+import { Toaster } from "react-hot-toast";
 
 function Layout() {
   const location = useLocation();
@@ -18,8 +22,9 @@ function Layout() {
   const hideLayout = hideNavbarRoutes.includes(location.pathname);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {!hideLayout && <Navbar />}
+    <Provider store={store}>
+      <div className="flex flex-col min-h-screen">
+        {!hideLayout && <Navbar />}
 
         <div className="flex-grow">
           <Routes>
@@ -29,12 +34,14 @@ function Layout() {
             <Route path="/register" element={<Register />} />
             <Route path="/category/:slug" element={<ShopPage />} />
             <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/cart" element={<Cart />} />
           </Routes>
         </div>
-
+        <Toaster position="top-center" reverseOrder={false} />
         {/* Footer only if not hidden */}
-      {!hideLayout && <Footer />}
-    </div>
+        {!hideLayout && <Footer />}
+      </div>
+    </Provider>
   );
 }
 

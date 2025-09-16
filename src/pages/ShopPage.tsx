@@ -79,10 +79,10 @@ export default function ShopPage() {
     if (slug) fetchProducts();
   }, [slug]);
 
-  if (loading) return <p className="flex items-center justify-center pt-20">
+  if (loading) return <div className="flex items-center justify-center pt-20">
     <div className="w-16 h-16 border-4 border-t-[#470096] border-gray-300 rounded-full animate-spin">
     </div>
-  </p>;
+  </div>;
 
   // Category filter
   const handleCategorySelect = (id: number) => {

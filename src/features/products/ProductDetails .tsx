@@ -6,6 +6,9 @@ import Breadcrumb from "./Breadcrumb";
 import ProductDetailsPage from "./ProductDetailsPage";
 import { MdClose } from "react-icons/md";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../store/cartSlice";
+import toast from "react-hot-toast";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +17,8 @@ export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
   const [openCart, setOpenCart] = useState(false);
+
+  const dispatch = useDispatch();
 
   // Zoom state
   const [lensPos, setLensPos] = useState({ x: 0, y: 0 });
@@ -37,10 +42,10 @@ export default function ProductDetails() {
     if (id) fetchProduct();
   }, [id]);
 
-  if (loading) return <p className="flex items-center justify-center pt-20">
+  if (loading) return <div className="flex items-center justify-center pt-20">
     <div className="w-16 h-16 border-4 border-t-[#470096] border-gray-300 rounded-full animate-spin">
     </div>
-  </p>;
+  </div>;
   if (!product) return <p className="text-center py-10">Product not found</p>;
 
   // Mouse move handler
@@ -58,11 +63,26 @@ export default function ProductDetails() {
     setLensPos({ x, y });
   };
 
+  // Add to cart handler with toast
+  const handleAddToCart = () => {
+    if (product) {
+      try {
+        dispatch(addToCart(product));
+        toast.success(`${product.title} added to cart!`, {
+          duration: 2000,
+        });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (err) {
+        toast.error("Failed to add product to cart!");
+      }
+    }
+  };
+
   return (
     <>
     <div className="">
        {/* Top Bar - Full Width */}
-      <div className="w-full bg-[#f1f2f3] mt-10">
+      <div className="hidden md:flex w-full bg-[#f1f2f3] mt-10">
         <div className="max-w-[1470px] mx-auto flex items-center justify-between px-6 ">
           <Breadcrumb product={product} />
         </div>
@@ -73,9 +93,9 @@ export default function ProductDetails() {
         <h1 className="flex items-center gap-2 text-[16px] capitalize text-[#888888]">
           <HomeBackButton />
           {slug}
-          <h2 className="text-[15px]  text-[#888888]">
+          <span className="text-[15px]  text-[#888888]">
             {product.title}
-          </h2>
+          </span>
         </h1>
       </div>
 
@@ -211,7 +231,7 @@ export default function ProductDetails() {
                   Brand
                 </span>
                 <span className="text-[#111111] text-[14px] sm:text-[15px] underline py-2">
-                  {product.brand?.name || "N/A"}
+                  {product.brand?.title || "N/A"}
                 </span>
                  {/* Refund */}
                 <span className="text-[14px] sm:text-[15px] text-[#888888]">
@@ -231,7 +251,7 @@ export default function ProductDetails() {
             </p>
           </div>
 
-           {/* Right side - Zoom Preview */}
+          {/* Right side - Zoom Preview */}
           {isZooming && window.innerWidth > 900 && (
             <div
               className="hidden lg:block absolute top-0 left-0 w-[350px] sm:w-[400px] md:w-[500px] h-[350px] sm:h-[400px] md:h-[500px] border shadow-xl rounded-lg bg-no-repeat bg-cover z-20"
@@ -244,6 +264,67 @@ export default function ProductDetails() {
               }}
             />
           )}
+        </div>
+
+        {/* Compact Add to Cart Section */}
+        <div className="hidden lg:flex  border rounded-xl p-4 flex-col gap-3 bg-white  ">
+          {/* Product Image */}
+          <div className="w-20 h-20 mx-auto mt-1">
+            <img
+              src={`https://shop.sprwforge.com/uploads/${product.image}`}
+              alt={product.title}
+              className="w-full h-full object-contain  border-gray-200"
+            />
+          </div>
+
+          {/* Title */}
+          <div className="flex flex-col items-center text-center mt-3">
+            <h2 className="text-sm sm:text-base font-medium text-[#111111] line-clamp-2">
+              {product.title}
+            </h2>
+          </div>
+
+          <div className="z-10 relative">
+            <div className="text-sm text-gray-600  sm:mb-8">
+              <div className="grid grid-cols-2 gap-y-2">
+                 {/* Brand */}
+                <span className="text-[14px] sm:text-[15px] text-[#888888] py-2">
+                  Brand
+                </span>
+                <span className="text-[#111111] text-[14px] sm:text-[15px] underline py-2">
+                  {product.brand?.title || "N/A"}
+                </span>
+                 {/* Refund */}
+                <span className="text-[14px] sm:text-[15px] text-[#888888]">
+                  Refund&
+                </span>
+                <span className="text-[#111111]">Not refundable</span>
+
+                 {/* Warranty */}
+                <span className="text-[14px] sm:text-[15px] text-[#888888]">
+                  Warranty
+                </span>
+                <span className="text-[#111111]">100% authentic</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Price */}
+          <div className="flex flex-col ">
+            <p className="font-medium text-[#111111]">
+              Price: € {product.selling?.toFixed(2) || "N/A"}
+            </p>
+          </div>
+
+          {/* Add to Cart Button below */}
+          <div className="flex mt-[80px] justify-center">
+            <button
+              onClick={handleAddToCart}
+              className="whitespace-nowrap w-full font-medium flex items-center justify-center gap-2 bg-gradient-to-b from-[#f7f8fa] rounded-xl to-[#e7e9ec] border border-[#bbb] shadow-inner text-sm sm:text-base h-10 px-4 transition-all duration-100 ease-in-out hover:from-[#e7e9ec] hover:to-[#f7f8fa] hover:border-gray-400"
+            >
+              Add to Cart
+            </button>
+          </div>
         </div>
       </div>
 
@@ -270,6 +351,18 @@ export default function ProductDetails() {
           {isExpanded ? "Read less" : "Read more"}
         </button>
       </div>
+
+      {/* Add to Cart button */}
+      <div className="">
+        <button
+          onClick={handleAddToCart}
+          className="custom1024:hidden whitespace-nowrap font-medium flex items-center justify-center gap-2 bg-gradient-to-b from-[#f7f8fa] rounded-xl to-[#e7e9ec] border border-[#bbb] shadow-inner text-base h-[44px] leading-[42px] px-4 mb-1 
+            transition-all duration-100 ease-in-out no-underline hover:from-[#e7e9ec] hover:to-[#f7f8fa] hover:border-gray-400"
+          >
+            Add to Cart
+        </button>
+      </div>
+      
     </div>
     </div>
     <div className="max-w-[1470px] mx-auto pt-4">

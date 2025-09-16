@@ -16,9 +16,13 @@ export type Product = {
   brand?: {
     id: number;
     title: string;
-    name:string
+    name: string;
   };
   category_id?: number;
-  // New property
   current_categories: Category[];
 };
+
+// CartItem is just Product + quantity
+export interface CartItem extends Product {
+  quantity: number;
+}

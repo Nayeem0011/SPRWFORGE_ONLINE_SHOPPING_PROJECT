@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import navberLogo from "../../assets/logo.png";
 import { useEffect, useRef, useState } from 'react';
 import type { Product } from '../../types';
+import CartIcon from '../../features/cart/CartIcon';
 
 const Search = () => {
   const [query, setQuery] = useState("");
@@ -170,6 +171,9 @@ const Search = () => {
                 )}
             </div>
           )}
+        </div>
+        <div className="relative inline-block">
+          <CartIcon />
         </div>
       </div>
     </div>

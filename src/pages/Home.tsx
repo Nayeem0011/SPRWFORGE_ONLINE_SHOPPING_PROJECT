@@ -96,10 +96,10 @@ const Home = () => {
       .catch(err => console.error("Categories fetch failed:", err));
   }, [page]);
 
-    if (loading) return <p className="flex items-center justify-center pt-20">
+    if (loading) return <div className="flex items-center justify-center pt-20">
       <div className="w-16 h-16 border-4 border-t-[#470096] border-gray-300 rounded-full animate-spin">
       </div>
-    </p>;
+    </div>;
 
   // Category filter
   const handleCategorySelect = (id: number) => {
@@ -155,6 +155,7 @@ const Home = () => {
           </p>
           
           {/* Sort by dropdown */}
+        
           <div>
             <span className="hidden md:inline-block pr-3 text-[13.5px]">Sort by</span>
             <div ref={dropdownRef} className="relative inline-block">
@@ -169,7 +170,33 @@ const Home = () => {
               </div>
 
               {isOpen && (
-                <ul className="absolute right-0 w-40 bg-white border border-gray-200 rounded-md shadow-md mt-1 z-10">
+                <>
+                {/* Mobile: full screen center modal */}
+                <div className="fixed inset-0 flex items-center justify-center z-50 md:hidden">
+                  <div
+                    className="absolute inset-0 bg-black/10"
+                    onClick={() => setIsOpen(false)}
+                  ></div>
+                  
+                  <div className="relative bg-white border border-gray-200 rounded-lg shadow-lg w-64 z-50">
+                    <ul className="">
+                      {["Featured", "Price low to high", "Price high to low", "Avg. customer review"].map(
+                        (option, idx) => (
+                          <li
+                            key={idx}
+                            className="p-3 hover:bg-gray-200 cursor-pointer"
+                            onClick={() => handleSort(option)}
+                          >
+                            {option}
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Desktop: normal dropdown */}
+                <ul className="hidden md:block absolute right-0 w-40 bg-white border border-gray-200 rounded-md shadow-md mt-1 z-10">
                   {["Featured", "Price low to high", "Price high to low", "Avg. customer review"].map((option, idx) => (
                     <li
                       key={idx}
@@ -182,11 +209,12 @@ const Home = () => {
                     </li>
                   ))}
                 </ul>
+                </>
               )}
             </div>
           </div>
 
-           {/* Filters only on mobile */}
+          {/* Filters only on mobile */}
           {isMobile && (
             <button
               onClick={() => setOpenSidebar(true)}
