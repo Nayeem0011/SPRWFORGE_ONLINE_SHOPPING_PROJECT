@@ -43,16 +43,16 @@ export default function Navbar() {
             <div className="relative inline-block">
               <div
                 onClick={toggleDropdown}
-                className={`flex items-center gap-2 hover:bg-[#f6f4f4] cursor-pointer px-2 py-1.5 rounded-xl transition ${
-                  isOpen ? "border border-[#470096]" : ""
-                }`}
+                  className={`flex items-center gap-2 hover:bg-[#f6f4f4] cursor-pointer 
+                    px-2 py-1.5 rounded-xl transition 
+                    text-xs sm:text-sm sm:px-3 sm:py-2
+                  ${isOpen ? "border border-[#470096]" : ""}`}
               >
-                <span className="text-sm">English</span>
-                {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                <span className="text-xs sm:text-sm">English</span>
+                  {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
               </div>
-
               {isOpen && (
-                <ul className="absolute w-40 bg-white border border-gray-200 rounded-md shadow-md mt-1 z-10">
+                <ul className="absolute w-28 sm:w-40 bg-white border border-gray-200 rounded-md shadow-md mt-1 z-10 text-xs sm:text-sm">
                   <li className="p-2 bg-[#f6f6f7] hover:bg-gray-200 cursor-pointer rounded-t-md">
                     English
                   </li>
@@ -68,7 +68,9 @@ export default function Navbar() {
               href="mailto:webzedcontact@gmail.com"
               className="flex items-center gap-2 text-sm"
             >
-              <TfiEmail />
+              <div className="hidden xs:inline-block">
+                <TfiEmail />
+              </div>
               <span>
                 <span className="hidden lg:inline-block mr-1">Mail</span>
                 webzedcontact@gmail.com
@@ -80,7 +82,9 @@ export default function Navbar() {
 
             {/* Helpline */}
             <a href="tel:4534345656" className="flex items-center gap-2 text-sm">
-              <IoCallOutline />
+              <div className="hidden xs:inline-block">
+                <IoCallOutline />
+              </div>
               <span>
                 <span className="hidden lg:inline-block mr-1">Helpline</span>
                 4534345656
