@@ -32,6 +32,20 @@ It includes category filtering, cart system, authentication, and responsive UI.
    ```bash
    git clone https://github.com/Nayeem0011/SPRWFORGE_ONLINE_SHOPPING_PROJECT.git
 
+2. **Navigate to the project folder**
+   ```bash
+   cd SPRWFORGE_ONLINE_SHOPPING_PROJECT
+
+3. **Install dependencies**
+   ```bash
+   npm install
+
+
+4. **Run the project**
+   ```bash
+   npm run dev
+
+
 
 
 ### 🏠 Home Page
