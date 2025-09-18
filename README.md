@@ -30,7 +30,7 @@ It includes category filtering, cart system, authentication, and responsive UI.
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/esproforce-chip.git
+   git clone https://github.com/Nayeem0011/SPRWFORGE_ONLINE_SHOPPING_PROJECT.git
 
 
 
