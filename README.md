@@ -1,6 +1,6 @@
 # ⚡ Esproforce Chip Project
 
-A modern eCommerce-like project built with **React, TypeScript, TailwindCSS, Redux Toolkit, and Firebase**.  
+A modern eCommerce-like project built with **React, TypeScript, TailwindCSS, Redux Toolkit**.  
 It includes category filtering, cart system, authentication, and responsive UI.
 
 ---
@@ -31,3 +31,15 @@ It includes category filtering, cart system, authentication, and responsive UI.
 1. **Clone the repository**
    ```bash
    git clone https://github.com/yourusername/esproforce-chip.git
+
+
+
+### 🏠 Home Page
+![Home](./screenshots/home.png)
+
+### 🛒 Details Page
+![Details Page](./screenshots/details.png)
+
+### 🛒 Cart Page
+![Cart](./screenshots/addtocart.png)
+
