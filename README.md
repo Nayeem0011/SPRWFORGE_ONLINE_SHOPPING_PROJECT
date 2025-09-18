@@ -1,7 +1,8 @@
 # ⚡ Esproforce Chip Project
 
-A modern eCommerce-like project built with **React, TypeScript, TailwindCSS, Redux Toolkit**.  
-It includes category filtering, cart system, authentication, and responsive UI.
+This is a fully functional **E-commerce Shop Application** developed as per the assignment requirements.  
+It is similar to [Test Shop](http://test.sprwforge.com/) and uses the official API base path:  
+👉 `https://shop.sprwforge.com/`
 
 ---
 
@@ -11,18 +12,26 @@ It includes category filtering, cart system, authentication, and responsive UI.
 ---
 
 ## 🚀 Features
-- 🔍 Category-based product filtering  
-- 🛒 Add to Cart with Toast notification 
-- 🎨 Responsive UI with TailwindCSS  
-- ⚡ Fast build using Vite + TypeScript  
+- 📂 **Sidebar with Categories** → Displays categories with children. On click, products load by category.  
+- 🛒 **Shop List** → Right part shows all products.  
+- 🔍 **Search Input** → Search products by query.  
+- 📄 **Product Details Page** → Shows detailed information for a selected product.  
+- ➕ **Add to Cart** → Add selected products to the cart.  
+- 🛒 **Cart Details** → Shows cart items with name, price, and quantity.  
+- 🔼🔽 **Increment/Decrement** → Update product quantity in the cart.  
+- 🔑 **User Login** → Authentication system with secure login.  
+- 🏠 **Add Address** → Users can add shipping address.  
+- 💳 **Checkout** → Final purchase step with cart + address.  
 
 ---
 
 ## 🛠️ Tech Stack
-- ⚛️ React (Vite + TypeScript)  
-- 🎨 Tailwind CSS  
-- 🔄 Redux Toolkit  
-- 📦 React Query  
+- ⚛️ **React (Vite + TypeScript)**  
+- 🎨 **Tailwind CSS** (responsive design)  
+- 🔄 **Redux Toolkit** (state management)  
+- 🔥 **Authentication** (user login)  
+- 🌐 **REST API** integration (`https://shop.sprwforge.com/`)  
+- 🎬 **Framer Motion** (animations)
 
 ---
 
