@@ -223,9 +223,22 @@ const Home = () => {
           </div>
 
           {/* Filters only on mobile */}
-          {isMobile && (
+          {/* {isMobile && (
             <button
               onClick={() => setShowSidebar(true)}
+              className="flex items-center justify-center gap-2 bg-gradient-to-b from-[#f7f8fa] rounded-xl to-[#e7e9ec] border border-[#bbb] shadow-inner text-base h-[44px] leading-[42px] px-4 mb-1 
+              transition-all duration-100 ease-in-out  no-underline hover:from-[#e7e9ec] hover:to-[#f7f8fa] hover:border-gray-400"
+            >
+              Filters
+              {showSidebar ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </button>
+          )} */}
+          {isMobile && (
+            <button
+              onClick={() =>{
+                setShowSidebar(prev => !prev);
+                setUserClosed(false);
+              }}
               className="flex items-center justify-center gap-2 bg-gradient-to-b from-[#f7f8fa] rounded-xl to-[#e7e9ec] border border-[#bbb] shadow-inner text-base h-[44px] leading-[42px] px-4 mb-1 
               transition-all duration-100 ease-in-out  no-underline hover:from-[#e7e9ec] hover:to-[#f7f8fa] hover:border-gray-400"
             >
@@ -252,15 +265,12 @@ const Home = () => {
         )}
 
         {/* SidebarModal only on mobile */}
-        {showSidebar && !userClosed && (
+        {isMobile && showSidebar && (
           <SidebarModal 
             categories={categories}
             onCategorySelect={handleCategorySelect}
             onPriceFilter={handlePriceFilter}
-             onClose={() => {
-              setShowSidebar(false);
-              setUserClosed(true); 
-            }}
+            onClose={() => setShowSidebar(false)}
           />
         )}
 
