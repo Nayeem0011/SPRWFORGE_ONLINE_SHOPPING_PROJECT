@@ -5,9 +5,27 @@ import { CiLock } from "react-icons/ci";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FaRegUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { registerUser } from "../auth/authSlice";
+import { useNavigate} from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../auth/hooks";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { loading, error } = useAppSelector(state => state.auth);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(registerUser({ name, email, password }))
+      .unwrap()
+      .then(() => navigate("/"))
+      .catch(() => {});
+  };
 
   return (
     <div>
@@ -25,7 +43,9 @@ const Register = () => {
 
       <div className="flex items-center justify-center">
         <div className="w-full max-w-lg bg-white shadow-lg rounded-2xl p-10"> 
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
+
+            {error && <p className="text-red-500 mb-2">{error}</p>}
            
              {/* Name */}
             <div>
@@ -37,6 +57,8 @@ const Register = () => {
                   required
                   className="w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:shadow-lg focus:ring-2 focus:ring-[#470096] focus:bg-gray-100 text-[13.5px]"
                   placeholder="Your name"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
                 />
               </div>
             </div>
@@ -51,6 +73,8 @@ const Register = () => {
                   required
                   className="w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:shadow-lg focus:ring-2 focus:ring-[#470096] focus:bg-gray-100 text-[13.5px]"
                   placeholder="Your email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -65,6 +89,8 @@ const Register = () => {
                   required
                   className="w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:shadow-lg focus:ring-2 focus:ring-[#470096] focus:bg-gray-100 text-[13.5px]"
                   placeholder="Your password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
@@ -90,6 +116,8 @@ const Register = () => {
                   required
                   className="w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:shadow-lg focus:ring-2 focus:ring-[#470096] focus:bg-gray-100 text-[13.5px]"
                   placeholder="Your password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
@@ -109,9 +137,10 @@ const Register = () => {
             <div className="flex justify-end">
               <button
                 type="submit"
+                disabled={loading}
                 className="w-[210px] bg-[#470096] text-[15px] text-white py-[10px] font-bold rounded-lg hover:bg-[#350074] transition"
               >
-                Submit
+                {loading ? "Loading..." : "Submit"}
               </button>
             </div>
 
@@ -133,3 +162,7 @@ const Register = () => {
 }
 
 export default Register
+
+
+
+
