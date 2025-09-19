@@ -49,13 +49,9 @@ It is similar to [Test Shop](http://test.sprwforge.com/) and uses the official A
    ```bash
    npm install
 
-
 4. **Run the project**
    ```bash
    npm run dev
-
-
-
 
 ### 🏠 Home Page
 ![Home](./screenshots/home.png)
