@@ -7,16 +7,17 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import ProductGrid from "../components/ProductGrid";
 import ErrorPage from "../notfound/ErrorPage";
 import SidebarModal from "../components/comon/SidebarModal";
+import { SHOPPAGEAPI } from "../api/shopApi";
 
 export default function ShopPage() {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug = "" } = useParams<{ slug: string }>();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Pagination + Top Bar
-  const [page] = useState(1);
-  const itemsPerPage = 8;
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 30;
 
   // Sort Dropdown
   const [isOpen, setIsOpen] = useState(false);
@@ -31,15 +32,15 @@ export default function ShopPage() {
 
   // Fetch Categories (Sidebar)
   useEffect(() => {
-    async function fetchCategories() {
+    const fetchCategories = async () => {
       try {
-        const res = await fetch("https://shop.sprwforge.com/api/v1/category");
+        const res = await fetch(SHOPPAGEAPI.categories);
         const data = await res.json();
-        setCategories(data.data?.result || []);
-      } catch (err) {
-        console.error(err);
+        setCategories(data?.data || []);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
       }
-    }
+    };
     fetchCategories();
   }, []);
 
@@ -64,11 +65,10 @@ export default function ShopPage() {
     async function fetchProducts() {
       setLoading(true);
       try {
-        const res = await fetch(
-          `https://shop.sprwforge.com/api/v1/all?category=${slug}&sortby=&shipping=&brand=&collection=&rating=0&max=0&min=0&page=&sidebar_data=false`
-        );
+        const res = await fetch(SHOPPAGEAPI.productsByCategory(slug));
         const data = await res.json();
         setProducts(data.data?.result?.data || []);
+        setPage(1);
       } catch (err) {
         console.error(err);
       } finally {
@@ -115,7 +115,9 @@ export default function ShopPage() {
            {/* Left side: Showing results + Category */}
           <p className="hidden md:inline-block text-[15px]">
             Showing {(page - 1) * itemsPerPage + 1} to {Math.min(page * itemsPerPage, products.length)} of {products.length} results
-            slug && <span className="ml-2 font-bold text-[16px] text-black">"{slug}"</span>
+            {slug && (
+              <span className="ml-2 font-bold text-[16px] text-black">"{slug}"</span>
+            )}
           </p>
 
            {/* Sort by dropdown */}
@@ -174,9 +176,10 @@ export default function ShopPage() {
         {!isMobile && (
           <aside className="lg:w-64 md:w-[220px] flex-shrink-0">
             <div className="sticky top-28">
-              <Sidebar categories={categories} activeSlug={slug} onCategorySelect={function (): void {
-                throw new Error("Function not implemented.");
-              } } 
+              <Sidebar 
+              categories={categories} 
+              activeSlug={slug} 
+              onCategorySelect={handleCategorySelect}
               />
             </div>
           </aside>

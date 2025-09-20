@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { TfiReload } from "react-icons/tfi";
+import { DETAILSPAGE_API, IMAGE_BASE_URL } from "../../api/shopApi";
 
 interface Product {
   id: string;
@@ -24,7 +25,7 @@ export default function ProductDetailsPage() {
 
   // suggestion_1 fetch
   useEffect(() => {
-    fetch(`https://shop.sprwforge.com/api/v1/suggested-products/624951306?page=${page1}`)
+    fetch(DETAILSPAGE_API.suggestedProducts("624951306", page1))
      .then((res) => res.json())
      .then((data) => {
         setSuggestion1(data.data.suggestion_1.data || []);
@@ -33,7 +34,7 @@ export default function ProductDetailsPage() {
 
   // suggestion_2 fetch
   useEffect(() => {
-    fetch(`https://shop.sprwforge.com/api/v1/suggested-products/624951306?page=${page2}`)
+    fetch(DETAILSPAGE_API.suggestedProducts("624951306", page2))
       .then((res) => res.json())
       .then((data) => {
         setSuggestion2(data.data.suggestion_2.data || []);
@@ -115,7 +116,7 @@ export default function ProductDetailsPage() {
             <a href={`/product/${product.id}`}  className="relative cursor-pointer group">
                {/* Image */}
               <img
-                src={`https://shop.sprwforge.com/uploads/${product.image}`}
+                src={`${IMAGE_BASE_URL}${product.image}`}
                 alt={product.title}
                 className="w-[214px] h-[214px] mx-auto object-contain"
               />

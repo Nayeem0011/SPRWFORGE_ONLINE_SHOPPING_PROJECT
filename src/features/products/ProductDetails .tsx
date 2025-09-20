@@ -9,9 +9,10 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../store/cartSlice";
 import toast from "react-hot-toast";
+import { DETAILS_API, IMAGE_BASE_URL } from "../../api/shopApi";
 
 export default function ProductDetails() {
-  const { id } = useParams<{ id: string }>();
+  const { id = "" } = useParams<{ id: string }>();
   const { slug } = useParams<{ slug: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +31,7 @@ export default function ProductDetails() {
   useEffect(() => {
     async function fetchProduct() {
       try {
-        const res = await fetch(`https://shop.sprwforge.com/api/v1/product/${id}?id=${id}&user_id=`);
+        const res = await fetch(DETAILS_API.productDetails(id));
         const data = await res.json();
         setProduct(data.data);
       } catch (err) {
@@ -42,10 +43,12 @@ export default function ProductDetails() {
     if (id) fetchProduct();
   }, [id]);
 
-  if (loading) return <div className="flex items-center justify-center pt-20">
-    <div className="w-16 h-16 border-4 border-t-[#470096] border-gray-300 rounded-full animate-spin">
-    </div>
-  </div>;
+  if (loading) 
+    return 
+    <div className="flex items-center justify-center pt-20">
+      <div className="w-16 h-16 border-4 border-t-[#470096] border-gray-300 rounded-full animate-spin">
+      </div>
+    </div>;
   if (!product) return <p className="text-center py-10">Product not found</p>;
 
   // Mouse move handler
@@ -83,7 +86,7 @@ export default function ProductDetails() {
     <div className="">
        {/* Top Bar - Full Width */}
       <div className="hidden md:flex w-full bg-[#f1f2f3] mt-10">
-        <div className="max-w-[1470px] mx-auto flex items-center justify-between px-6 ">
+        <div className="w-[1470px] mx-auto px-3 ">
           <Breadcrumb product={product} />
         </div>
       </div>
@@ -111,7 +114,7 @@ export default function ProductDetails() {
               onMouseLeave={() => setIsZooming(false)}
             >
               <img
-                src={`https://shop.sprwforge.com/uploads/${product.image}`}
+                src={`${IMAGE_BASE_URL}${product.image}`}
                 alt={product.title}
                 className="w-full h-full object-contain cursor-pointer"
                 onClick={() => setOpenCart(true)}
@@ -146,7 +149,7 @@ export default function ProductDetails() {
                  {/* Left side - Product Image */}
                 <div className="flex-1 flex items-center justify-center p-6 sm:p-10 bg-white relative">
                   <img
-                    src={`https://shop.sprwforge.com/uploads/${product.image}`}
+                    src={`${IMAGE_BASE_URL}${product.image}`}
                     alt={product.title}
                     className="max-h-[350px] sm:max-h-[450px] object-contain"
                   />
@@ -176,7 +179,7 @@ export default function ProductDetails() {
                    {/* Small image preview */}
                   <div className="rounded-lg p-1 w-20">
                     <img
-                      src={`https://shop.sprwforge.com/uploads/${product.image}`}
+                      src={`${IMAGE_BASE_URL}${product.image}`}
                       alt={product.title}
                       className="rounded-lg border border-[#470096] shadow-lg"
                     />
@@ -196,7 +199,7 @@ export default function ProductDetails() {
            {/* Small thumbnail */}
           <div className="flex items-center justify-center gap-2 py-5">
             <img
-              src={`https://shop.sprwforge.com/uploads/${product.image}`}
+              src={`${IMAGE_BASE_URL}${product.image}`}
               alt="thumbnail"
               className="w-[60px] h-[60px] object-cover border border-[#470096] shadow-[0_0_8px_2px_rgba(71,0,150,0.3)] rounded-xl cursor-pointer"
             />
@@ -256,7 +259,7 @@ export default function ProductDetails() {
             <div
               className="hidden lg:block absolute top-0 left-0 w-[350px] sm:w-[400px] md:w-[500px] h-[350px] sm:h-[400px] md:h-[500px] border shadow-xl rounded-lg bg-no-repeat bg-cover z-20"
               style={{
-                backgroundImage: `url(https://shop.sprwforge.com/uploads/${product.image})`,
+                backgroundImage: `url(${IMAGE_BASE_URL}${product.image})`,
                 backgroundSize: `${400 * zoomLevel}px ${500 * zoomLevel}px`,
                 backgroundPosition: `-${lensPos.x * zoomLevel}px -${
                 lensPos.y * zoomLevel
@@ -271,7 +274,7 @@ export default function ProductDetails() {
           {/* Product Image */}
           <div className="w-20 h-20 mx-auto mt-1">
             <img
-              src={`https://shop.sprwforge.com/uploads/${product.image}`}
+              src={`${IMAGE_BASE_URL}${product.image}`}
               alt={product.title}
               className="w-full h-full object-contain  border-gray-200"
             />
@@ -317,7 +320,7 @@ export default function ProductDetails() {
           </div>
 
           {/* Add to Cart Button below */}
-          <div className="flex mt-[80px] justify-center">
+          <div className="flex mt-[90px] justify-center">
             <button
               onClick={handleAddToCart}
               className="whitespace-nowrap w-full font-medium flex items-center justify-center gap-2 bg-gradient-to-b from-[#f7f8fa] rounded-xl to-[#e7e9ec] border border-[#bbb] shadow-inner text-sm sm:text-base h-10 px-4 transition-all duration-100 ease-in-out hover:from-[#e7e9ec] hover:to-[#f7f8fa] hover:border-gray-400"

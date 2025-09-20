@@ -5,6 +5,7 @@ import navberLogo from "../../assets/logo.png";
 import { useEffect, useRef, useState } from 'react';
 import type { Product } from '../../types';
 import CartIcon from '../../features/cart/CartIcon';
+import { IMAGE_BASE_URL, SEARCH_PRODUCTS_API } from '../../api/shopApi';
 
 const Search = () => {
   const [query, setQuery] = useState("");
@@ -17,9 +18,7 @@ const Search = () => {
   useEffect(() => {
     if (query.trim().length > 0) {
       setLoading(true); // earch start
-      fetch(
-        `https://shop.sprwforge.com/api/v1/products?sortby=&shipping=&brand=&collection=&rating=0&max=0&min=0&q=${query}&page=&all_categories=true&sidebar_data=true`
-      )
+      fetch(SEARCH_PRODUCTS_API(query))
         .then((res) => res.json())
         .then((data) => {
           const productList = data.data?.result?.data || [];
@@ -154,7 +153,7 @@ const Search = () => {
                               }}
                               >
                                 <img
-                                  src={p.image?.startsWith("http") ? p.image : `https://shop.sprwforge.com/uploads/${p.image}`}
+                                  src={p.image?.startsWith("http") ? p.image :`${IMAGE_BASE_URL}${p.image}`}
                                   alt={p.title}
                                   className="w-[70px] h-[80px] object-contain flex-shrink-0"
                                 />

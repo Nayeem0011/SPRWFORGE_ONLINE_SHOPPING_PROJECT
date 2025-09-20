@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import type { AppDispatch, RootState } from "../../store/store";
 import { addToCart, deleteFromCart, removeFromCart } from "../../store/cartSlice";
 import toast from "react-hot-toast";
+import { IMAGE_BASE_URL } from "../../api/shopApi";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ const CartPage = () => {
                   src={
                     item.image?.startsWith("http")
                       ? item.image
-                      : `https://shop.sprwforge.com/uploads/${item.image}`
+                      : `${IMAGE_BASE_URL}${item.image}`
                   }
                   alt={item.title}
                   className="w-20 h-20 object-contain rounded"
@@ -120,7 +121,7 @@ const CartPage = () => {
           <h2 className="text-xl font-bold text-right">
             Total: € {total.toFixed(2)}
           </h2>
-          <Link to={"/ordersection"}>
+          <Link to={"/"}>
             <button className="font-semibold mt-4 w-full flex items-center justify-center gap-2 bg-gradient-to-b from-[#f7f8fa] rounded-xl to-[#e7e9ec] border border-[#bbb] shadow-inner text-base h-[44px] leading-[42px] px-4 mb-1 
               transition-all duration-100 ease-in-out  no-underline hover:from-[#e7e9ec] hover:to-[#f7f8fa] hover:border-gray-400">
               Order Now

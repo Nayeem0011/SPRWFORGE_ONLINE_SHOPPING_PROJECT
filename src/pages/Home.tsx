@@ -5,6 +5,7 @@ import ProductGrid from "../components/ProductGrid";
 import type { Category, Product } from "../types";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import SidebarModal from "../components/comon/SidebarModal";
+import { fetchProducts, fetchCategories } from "../api/shopApi";
 
 const Home = () => {
 
@@ -81,11 +82,10 @@ const Home = () => {
     setLoading(true);
 
     // Products fetch
-    fetch(`https://shop.sprwforge.com/api/v1/products?page=${page}`)
-      .then(res => res.json())
+    fetchProducts(page)
       .then(data => {
         setProducts(data.data.result.data);
-        setFiltered(data.data.result.data); // First will show all
+        setFiltered(data.data.result.data);
         setTotalPages(data.data.result.last_page);
         setLoading(false);
       })
@@ -94,9 +94,8 @@ const Home = () => {
         setLoading(false);
       });
 
-    // Categories fetch
-    fetch("https://shop.sprwforge.com/api/v1/products?all_categories=true&sidebar_data=true")
-      .then(res => res.json())
+      // Categories fetch
+      fetchCategories()
       .then(json => {
         const cats: Category[] = json.data?.all_categories || [];
         setCategories(cats);

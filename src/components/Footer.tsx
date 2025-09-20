@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import footerLogo from "../assets/logo.png";
 import { Link } from "react-router-dom";
+import { GET_COMMON_API } from "../api/shopApi";
 
 interface Category {
   id: number;
@@ -15,7 +16,7 @@ export default function Footer() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("https://shop.sprwforge.com/api/v1/common");
+       const res = await fetch(GET_COMMON_API());
         const result = await res.json();
 
         // categories is coming data.categories in between

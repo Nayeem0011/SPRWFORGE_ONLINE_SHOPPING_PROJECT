@@ -1,6 +1,7 @@
 import { TfiReload } from "react-icons/tfi";
 import type { Product } from "../types";
 import { Link } from "react-router-dom";
+import { IMAGE_BASE_URL } from "../api/shopApi";
 
 interface Props {
   product: Product;
@@ -12,7 +13,7 @@ export default function ProductCard({ product }: Props) {
       <Link to={`/product/${product.id}`} className="relative cursor-pointer group">
          {/* Image */}
         <img
-          src={`https://shop.sprwforge.com/uploads/${product.image}`}
+          src={`${IMAGE_BASE_URL}${product.image}`}
           alt={product.title}
           className=" object-cover mb-2"
         />

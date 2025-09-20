@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../api/api";
+import api from "../api/auth";
 
 interface AuthState {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
